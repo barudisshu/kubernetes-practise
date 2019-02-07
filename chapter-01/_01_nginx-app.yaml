@@ -39,7 +39,6 @@ metadata:
     app: nginx-app
   namespace: default
 spec:
-  clusterIP: None
   selector:
     app: nginx-app
   ports:
