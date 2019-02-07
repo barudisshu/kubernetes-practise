@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: nginx-app
+  name: nginx-ingress
   labels:
     app: nginx-app
   annotations:
