@@ -50,17 +50,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: tiller
-  namespace: kube-sytem
+  namespace: kube-system
   labels:
     app: helm
     name: tiller
 rules:
   - apiGroups:
-    - ""
-    verbs:
-      - get
-      - list
-      - watch
+      - ""
     resources:
       - pods
       - pods/status
@@ -70,6 +66,10 @@ rules:
       - endpoints
       - endpoints/status
       - deployments
+    verbs:
+      - get
+      - list
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
