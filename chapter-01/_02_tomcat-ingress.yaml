@@ -58,7 +58,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: tomcat.ilinux.io
+    - host: master.kubernetes.io
       http:
         paths:
           - backend:
