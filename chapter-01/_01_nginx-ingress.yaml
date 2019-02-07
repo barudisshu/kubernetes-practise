@@ -10,7 +10,7 @@ metadata:
 spec:
   rules:
     - host: nginx.kubernetes.io
-    - http:
+      http:
         paths:
           - backend:
               serviceName: nginx-app
