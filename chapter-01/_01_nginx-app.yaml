@@ -39,7 +39,6 @@ metadata:
     app: nginx-app
   namespace: default
 spec:
-  clusterIP: None
   selector:
     app: nginx-app
   ports:
@@ -47,6 +46,5 @@ spec:
       port: 8080
       protocol: TCP
       targetPort: 80
-  type: ClusterIP
   sessionAffinity: None
 ---
