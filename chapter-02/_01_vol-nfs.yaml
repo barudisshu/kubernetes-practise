@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vol-nfs-pod
+  labels:
+    app: vol-nfs-pod
+spec:
+  containers:
+    - name: vol-nfs-pod
+      image: redis:4-alpine
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 6379
+          name: redisport
+      volumeMounts:
+        - mountPath: /data
+          name: redisdata
+  restartPolicy: Always
+  volumes:
+    - name: redisdata
+      nfs:
+        path: /data/redis
+        server: nfs.kubernetes.io
+        readOnly: false

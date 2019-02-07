@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vol-hostpath-pod
+  labels:
+    app: vol-hostpath-pod
+spec:
+  containers:
+    - name: vol-hostpath-pod
+      image: ikubernetes/filebeat:5.6.7-alpine
+      env:
+        - name: REDIS_HOST
+          value: redis.kubernetes.io:6379
+        - name: LOG_LEVEL
+          value: info
+      volumeMounts:
+        - mountPath: /var/log
+          name: varlog
+        - mountPath: /var/run/docker.sock
+          name: socket
+        - mountPath: /var/lib/docker/containers
+          name: varlibdockercontainers
+          readOnly: true
+      imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 30
+  volumes:
+    - name: varlog
+      hostPath:
+        path: /var/log
+    - name: varlibdockercontainers
+      hostPath:
+        path: /var/lib/docker/containers
+    - name: socket
+      hostPath:
+        path: /var/run/docker.sock
