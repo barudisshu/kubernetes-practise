@@ -61,6 +61,7 @@ spec:
     - host: master.kubernetes.io
       http:
         paths:
-          - backend:
+          - path: /tomcat
+            backend:
               serviceName: tomcat-svc
               servicePort: 80
