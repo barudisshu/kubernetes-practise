@@ -47,5 +47,7 @@ spec:
       protocol: TCP
       targetPort: 80
   type: ClusterIP
+  externalIPs:
+    - 192.168.77.1
   sessionAffinity: None
 ---
