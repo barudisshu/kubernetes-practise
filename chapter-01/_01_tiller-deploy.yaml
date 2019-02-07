@@ -1,0 +1,67 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: tiller-deploy
+  namespace: kube-system
+  labels:
+    app: helm
+    name: tiller
+  annotations:
+    deployment.kubernetes.io/revision: '2'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helm
+      name: tiller
+  template:
+    metadata:
+      labels:
+        app: helm
+        name: tiller
+    spec:
+      containers:
+        - name: tiller
+          image: registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.3
+          ports:
+            - name: tiller
+              containerPort: 44134
+              protocol: TCP
+            - name: http
+              containerPort: 44135
+              protocol: TCP
+          resources: {}
+          livenessProbe:
+            httpGet:
+              path: "/liveness"
+              port: 44135
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: "/readiness"
+              port: 44135
+              scheme: HTTP
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      serviceAccountName: tiller
+      automountServiceAccountToken: true
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: tiller
+  namespace: kube-system
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
