@@ -55,7 +55,9 @@ metadata:
     app: helm
     name: tiller
 rules:
-  - verbs:
+  - apiGroups:
+      - ""
+    verbs:
       - get
       - list
       - watch
