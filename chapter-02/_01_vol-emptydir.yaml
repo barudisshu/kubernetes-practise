@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vol-emptydir-pod
+  labels:
+    app: vol-emptydir-pod
+spec:
+  containers:
+    - name: vol-emptydir-pod
+      image: nginx:1.12-alpine
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: html
+    - name: pagegen
+      image: alpine
+      volumeMounts:
+        - mountPath: /html
+          name: html
+      command:
+        - "/bin/sh"
+        - "-c"
+      args:
+        - while true; do
+            echo $(hostname) $(date) >> /html/index.html;
+            sleep 10;
+          done
+  restartPolicy: Always
+  volumes:
+    - name: html
+      emptyDir: {}
