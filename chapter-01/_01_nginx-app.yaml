@@ -6,6 +6,7 @@ metadata:
     app: nginx-app
 spec:
   replicas: 2
+  revisionHistoryLimit: 5
   template:
     metadata:
       name: nginx-app
@@ -18,6 +19,13 @@ spec:
           ports:
             - containerPort: 80
           imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 200m
+              memory: 128Mi
+      dnsPolicy: ClusterFirst
       restartPolicy: Always
   selector:
     matchLabels:
