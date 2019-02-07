@@ -13,7 +13,6 @@ spec:
     - host: master.kubernetes.io
     - http:
         paths:
-          - path: /nginx
-            backend:
+          - backend:
               serviceName: nginx-app
               servicePort: 80
