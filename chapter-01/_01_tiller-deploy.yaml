@@ -56,7 +56,7 @@ metadata:
     name: tiller
 rules:
   - apiGroups:
-      - ""
+    - ""
     verbs:
       - get
       - list
