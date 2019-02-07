@@ -58,10 +58,9 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: master.kubernetes.io
+    - host: tomcat.kubernetes.io
       http:
         paths:
-          - path: /tomcat
-            backend:
+          - backend:
               serviceName: tomcat-svc
               servicePort: 80
