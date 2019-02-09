@@ -4,7 +4,7 @@ metadata:
   name: ceph-secret
 type: "kubernetes.io/rbd"
 data:
-  key: QVFENnNsNWMrQm52T2hBQXVYclJVeVNuUzBhOXVUVk00WnpiVFE9PQ==
+  key: AQD6sl5c+BnvOhAAuXrRUySnS0a9uTVM4ZzbTQ==
 ---
 apiVersion: v1
 kind: Pod
