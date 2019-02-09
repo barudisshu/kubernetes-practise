@@ -21,6 +21,18 @@ parameters:
   userId: admin
   userSecretName: ceph-secret
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ceph-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: ceph-storage
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -53,13 +65,3 @@ spec:
         - name: redis-rbd-vol
           persistentVolumeClaim:
             claimName: ceph-claim
-  volumeClaimTemplates:
-    - metadata:
-        name: ceph-claim
-        annotations:
-          volume.beta.kubernetes.io/storage-class: ceph-storage
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 10Gi
