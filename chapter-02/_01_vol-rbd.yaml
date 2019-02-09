@@ -31,7 +31,7 @@ spec:
         pool: kube
         image: redis
         fsType: xfs
-        readOnly: true
+        readOnly: false
         user: admin
         keyring: /etc/ceph/keyring
         secretRef:
