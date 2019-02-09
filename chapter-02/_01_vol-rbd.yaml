@@ -3,7 +3,7 @@ kind: Secret
 metadata:
   name: ceph-secret
   labels:
-    app: vol-rbd-pod
+    app: rbd-provisioner
 type: "kubernetes.io/rbd"
 data:
   key: QVFENnNsNWMrQm52T2hBQXVYclJVeVNuUzBhOXVUVk00WnpiVFE9PQ==
@@ -16,7 +16,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: vol-rbd-pod
+      app: rbd-provisioner
   replicas: 1
   template:
     metadata:
@@ -33,7 +33,7 @@ kind: Pod
 metadata:
   name: vol-rbd-pod
   labels:
-    app: vol-rbd-pod
+    app: rbd-provisioner
 spec:
   containers:
     - name: vol-rbd-pod
