@@ -6,10 +6,12 @@ type: kubernetes.io/rbd
 data:
   key: QVFENnNsNWMrQm52T2hBQXVYclJVeVNuUzBhOXVUVk00WnpiVFE9PQ==
 ---
-apiVersion: storage.k8s.io/v1
+apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
 metadata:
   name: ceph-storage
+  annotations:
+    storageclass.beta.kubernetes.io/is-default-class: "true"
 provisioner: kubernetes.com/rbd
 parameters:
   monitors: '192.168.50.32:6789'
@@ -45,7 +47,7 @@ spec:
             - containerPort: 6379
               name: redisport
           volumeMounts:
-            - name: data
+            - name: ceph-claim
               mountPath: /data
       volumes:
         - name: redis-rbd-vol
