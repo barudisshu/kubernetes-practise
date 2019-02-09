@@ -48,35 +48,54 @@ spec:
               serviceName: vol-rbd-service
               servicePort: 6379
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: vol-rbd-pod
-  annotations:
-    volume.beta.kubernetes.io/storage-class: ceph-redis-secret
   labels:
     app: vol-rbd-pod
 spec:
-  containers:
-    - name: vol-rbd-pod
-      image: redis:4-alpine
-      imagePullPolicy: IfNotPresent
-      ports:
-        - containerPort: 6379
-          name: redisport
-      volumeMounts:
-        - name: data
-          mountPath: /data
-  volumes:
-    - name: redis-rbd-vol
-      rbd:
-        monitors:
-          - '192.168.50.32:6789'
-        pool: kube
-        image: redis
-        fsType: xfs
-        readOnly: false
-        user: admin
-        keyring: /etc/ceph/keyring
-        secretRef:
-          name: ceph-secret
+  serviceName: vol-rbd-pod
+  selector:
+    matchLabels:
+      app: vol-rbd-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vol-rbd-pod
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: vol-rbd-pod
+          image: redis:4-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+              name: redisport
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: redis-rbd-vol
+          rbd:
+            monitors:
+              - '192.168.50.32:6789'
+            pool: kube
+            image: redis
+            fsType: xfs
+            readOnly: false
+            user: admin
+            keyring: /etc/ceph/keyring
+            secretRef:
+              name: ceph-secret
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        annotations:
+          volume.beta.kubernetes.io/storage-class: ceph-redis-secret
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
