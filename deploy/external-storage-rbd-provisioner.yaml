@@ -83,7 +83,7 @@ spec:
   template:
     metadata:
       labels:
-        app: rbd-provisioner
+        name: rbd-provisioner
     spec:
       containers:
         - name: rbd-provisioner
