@@ -18,6 +18,11 @@ parameters:
   pool: redis
   userId: admin
   userSecretName: ceph-redis-secret
+  fsType: xfs
+  image: redis
+  readOnly: false
+  user: admin
+  keyring: /etc/ceph/keyring
 ---
 apiVersion: v1
 kind: Service
@@ -76,19 +81,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-      volumes:
-        - name: redis-rbd-vol
-          rbd:
-            monitors:
-              - '192.168.50.32:6789'
-            pool: kube
-            image: redis
-            fsType: xfs
-            readOnly: false
-            user: admin
-            keyring: /etc/ceph/keyring
-            secretRef:
-              name: ceph-secret
   volumeClaimTemplates:
     - metadata:
         name: data
