@@ -54,7 +54,7 @@ metadata:
     volume.beta.kubernetes.io/storage-class: ceph-rbd
 spec:
   accessModes:
-    - ReadWriteOne
+    - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
