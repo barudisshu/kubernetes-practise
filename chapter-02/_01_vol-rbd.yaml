@@ -18,11 +18,6 @@ parameters:
   pool: kube
   userId: admin
   userSecretName: ceph-redis-secret
-  fsType: xfs
-  image: redis
-  readOnly: false
-  user: admin
-  keyring: /etc/ceph/keyring
 ---
 apiVersion: v1
 kind: Service
