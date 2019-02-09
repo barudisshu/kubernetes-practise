@@ -32,7 +32,7 @@ spec:
         image: redis
         fsType: xfs
         readOnly: false
-        user: cephuser
+        user: admin
         secretRef:
           name: ceph-secret
   restartPolicy: Always
