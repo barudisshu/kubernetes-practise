@@ -6,33 +6,70 @@ type: "kubernetes.io/rbd"
 data:
   key: QVFENnNsNWMrQm52T2hBQXVYclJVeVNuUzBhOXVUVk00WnpiVFE9PQ==
 ---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ceph-storage
+provisioner: "kubernetes.io/rbd"
+parameters:
+  monitors: '192.168.50.32:6789'
+  adminId: admin
+  adminSecretName: ceph-secret
+  pool: redis
+  userId: admin
+  userSecretName: ceph-secret
+---
 apiVersion: v1
-kind: Pod
+kind: Service
+metadata:
+  name: vol-rbd-service
+spec:
+  ports:
+    - port: 6379
+      name: redis
+  clusterIP: None
+  selector:
+    app: vol-rbd-pod
+---
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: vol-rbd-pod
   labels:
     app: vol-rbd-pod
 spec:
-  containers:
-    - name: vol-rbd-pod
-      image: redis:4-alpine
-      ports:
-        - containerPort: 6379
-          name: redisport
-      volumeMounts:
-        - mountPath: /data
-          name: redis-rbd-vol
-      imagePullPolicy: IfNotPresent
-  volumes:
-    - name: redis-rbd-vol
-      rbd:
-        monitors:
-          - 192.168.50.32:6789
-        pool: kube
-        image: redis
-        user: admin
-        fsType: xfs
-        readOnly: false
-        secretRef:
-          name: ceph-secret
-  restartPolicy: Always
+  serviceName: vol-rbd-pod
+  selector:
+    matchLabels:
+      app: vol-rbd-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vol-rbd-pod
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: vol-rbd-pod
+          image: redis:4-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+              name: redisport
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: redis-rbd-vol
+          persistentVolumeClaim:
+            claimName: ceph-claim
+  volumeClaimTemplates:
+    - metadata:
+        name: ceph-claim
+        annotations:
+          volume.beta.kubernetes.io/storage-class: ceph-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
