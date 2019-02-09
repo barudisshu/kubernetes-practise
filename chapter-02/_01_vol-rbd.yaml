@@ -2,38 +2,16 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: ceph-secret
-  labels:
-    app: rbd-provisioner
 type: "kubernetes.io/rbd"
 data:
   key: QVFENnNsNWMrQm52T2hBQXVYclJVeVNuUzBhOXVUVk00WnpiVFE9PQ==
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: rbd-provisioner
-  namespace: kube-system
-spec:
-  selector:
-    matchLabels:
-      app: rbd-provisioner
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: rbd-provisioner
-    spec:
-      containers:
-        - name: rbd-provisioner
-          image: "quay.io/external_storage/rbd-provisioner:latest"
-      serviceAccountName: persistent-volume-binder
 ---
 apiVersion: v1
 kind: Pod
 metadata:
   name: vol-rbd-pod
   labels:
-    app: rbd-provisioner
+    app: vol-rbd-pod
 spec:
   containers:
     - name: vol-rbd-pod
