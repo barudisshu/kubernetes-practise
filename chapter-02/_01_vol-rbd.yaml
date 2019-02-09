@@ -47,7 +47,7 @@ spec:
             - containerPort: 6379
               name: redisport
           volumeMounts:
-            - name: ceph-claim
+            - name: redis-rbd-vol
               mountPath: /data
       volumes:
         - name: redis-rbd-vol
