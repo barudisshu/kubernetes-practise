@@ -6,6 +6,22 @@ type: "kubernetes.io/rbd"
 data:
   key: QVFENnNsNWMrQm52T2hBQXVYclJVeVNuUzBhOXVUVk00WnpiVFE9PQ==
 ---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ceph-rbd
+provisioner: kubernetes.io/rbd
+parameters:
+  monitors: 192.168.50.32:6789
+  adminId: admin
+  adminSecretName: ceph-secret
+  pool: kube
+  userId: admin
+  userSecretName: ceph-secret
+  fsType: xfs
+  imageFormat: "2"
+  imageFeatures: "layering"
+---
 apiVersion: v1
 kind: Pod
 metadata:
@@ -25,15 +41,17 @@ spec:
       imagePullPolicy: IfNotPresent
   volumes:
     - name: redis-rbd-vol
-      rbd:
-        monitors:
-          - '192.168.50.32:6789'
-        pool: kube
-        image: redis
-        fsType: xfs
-        readOnly: false
-        user: admin
-        keyring: /etc/ceph/keyring
-        secretRef:
-          name: ceph-secret
+      persistentVolumeClaim:
+        claimName: ceph-claim
   restartPolicy: Always
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ceph-claim
+spec:
+  accessModes:
+    - ReadWriteOne
+  resources:
+    requests:
+      storage: 2Gi
