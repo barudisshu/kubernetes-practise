@@ -4,7 +4,7 @@ metadata:
   name: ceph-secret
 type: "kubernetes.io/rbd"
 data:
-  key: AQD6sl5c+BnvOhAAuXrRUySnS0a9uTVM4ZzbTQ==
+  key: QVFENnNsNWMrQm52T2hBQXVYclJVeVNuUzBhOXVUVk00WnpiVFE9PQ==
 ---
 apiVersion: v1
 kind: Pod
@@ -33,6 +33,7 @@ spec:
         fsType: xfs
         readOnly: false
         user: admin
+        keyring: /etc/ceph/keyring
         secretRef:
           name: ceph-secret
   restartPolicy: Always
